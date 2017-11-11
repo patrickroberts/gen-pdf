@@ -1,0 +1,16 @@
+{
+  "name": "gen-pdf",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "pdf": "./index.js"
+  },
+  "author": "Patrick Roberts",
+  "license": "MIT",
+  "dependencies": {
+    "canvas": "^2.0.0-alpha.6",
+    "di-proxy": "^2.0.3",
+    "yargs": "^10.0.3"
+  }
+}

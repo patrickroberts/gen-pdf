@@ -1,0 +1,64 @@
+{
+  "file": {
+    "alias": "f",
+    "describe": "Name of pdf file output",
+    "type": "string",
+    "demandOption": true
+  },
+  "images": {
+    "alias": "i",
+    "describe": "Directory of images",
+    "type": "string",
+    "default": "."
+  },
+  "orientation": {
+    "alias": "o",
+    "describe": "Orientation of pdf pages",
+    "type": "string",
+    "default": "portrait",
+    "choices": [
+      "portrait",
+      "landscape"
+    ]
+  },
+  "size": {
+    "alias": "s",
+    "describe": "Contain the image or cover the page",
+    "type": "string",
+    "default": "contain",
+    "choices": [
+      "contain",
+      "cover"
+    ]
+  },
+  "left": {
+    "alias": "l",
+    "describe": "Left padding percentage",
+    "type": "number",
+    "default": 50
+  },
+  "top": {
+    "alias": "t",
+    "describe": "Top padding percentage",
+    "type": "number",
+    "default": 50
+  },
+  "width": {
+    "alias": "w",
+    "describe": "Page width in pixels",
+    "type": "number",
+    "default": 600
+  },
+  "height": {
+    "alias": "h",
+    "describe": "Page height in pixels",
+    "type": "number",
+    "default": 840
+  },
+  "match": {
+    "alias": "m",
+    "describe": "Matched filenames",
+    "type": "string",
+    "default": "(gif|jpe?g|png|svg)$"
+  }
+}
