@@ -1,6 +1,6 @@
 # gen-pdf
 
-A command-line utility for generating a PDF file from a directory of images, built with [yargs] and [node-canvas][canvas].
+A command-line utility for generating a PDF file from a directory of images.
 
 ## Installation
 
@@ -24,6 +24,10 @@ A command-line utility for generating a PDF file from a directory of images, bui
       --height, -h       Page height in pixels                     [number] [default: 840]
       --match, -m        Matched filenames      [string] [default: "(gif|jpe?g|png|svg)$"]
       --help             Show help                                               [boolean]
+
+## Credit
+
+Built with [yargs] and [node-canvas][canvas].
 
 ## License
 

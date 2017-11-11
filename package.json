@@ -1,6 +1,6 @@
 {
   "name": "gen-pdf",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A command-line utility for generating a PDF file from a directory of images, built with [yargs] and [node-canvas][canvas].",
   "main": "index.js",
   "bin": {
