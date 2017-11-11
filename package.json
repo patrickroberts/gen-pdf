@@ -1,7 +1,7 @@
 {
   "name": "gen-pdf",
   "version": "0.0.0",
-  "description": "",
+  "description": "A command-line utility for generating a PDF file from a directory of images, built with [yargs] and [node-canvas][canvas].",
   "main": "index.js",
   "bin": {
     "pdf": "./index.js"
@@ -12,5 +12,20 @@
     "canvas": "^2.0.0-alpha.6",
     "di-proxy": "^2.0.3",
     "yargs": "^10.0.3"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrickroberts/gen-pdf.git"
+  },
+  "keywords": [
+    "pdf",
+    "image",
+    "cli"
+  ],
+  "bugs": {
+    "url": "https://github.com/patrickroberts/gen-pdf/issues"
+  },
+  "homepage": "https://github.com/patrickroberts/gen-pdf#readme"
 }
