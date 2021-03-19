@@ -1,6 +1,6 @@
 {
   "name": "gen-pdf",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Create a PDF file from a set of images",
   "main": "index.js",
   "bin": {

@@ -53,7 +53,7 @@ async function main() {
   };
 
   for (const [index, filename, promise] of images) {
-    progress(index, images.length, `Loading page ${index + 1}: ${filename}`);
+    progress(100 * index / images.length, `Loading page ${index + 1}: ${filename}`);
 
     await task(async () => {
       const image = await promise;
@@ -64,7 +64,7 @@ async function main() {
     });
   }
 
-  log(`[100%] Writing output${argv.file ? ` to ${argv.file}` : ''}`);
+  progress(100, `Writing output${argv.file ? ` to ${argv.file}` : ''}`);
 
   await task(async () => {
     const {
@@ -108,11 +108,9 @@ function size(page, image) {
   return { left, top, width, height };
 }
 
-function progress(loaded, total, message) {
+function progress(percent, message) {
   if (argv.dry || argv.progress) {
-    const percent = (100 * loaded / total).toFixed(0);
-
-    log(`[${percent.padStart(3)}%] ${message}`);
+    log(`[${percent.toFixed(0).padStart(3)}%] ${message}`);
   }
 }
 
