@@ -1,29 +1,17 @@
 {
-  "file": {
-    "alias": "f",
-    "describe": "Name of pdf file output",
-    "type": "string",
-    "demandOption": true
-  },
   "images": {
     "alias": "i",
-    "describe": "Directory of images",
-    "type": "string",
-    "default": "."
+    "describe": "Image input filenames",
+    "type": "array",
+    "demandOption": true
   },
-  "orientation": {
-    "alias": "o",
-    "describe": "Orientation of pdf pages",
-    "type": "string",
-    "default": "portrait",
-    "choices": [
-      "portrait",
-      "landscape"
-    ]
+  "file": {
+    "alias": "f",
+    "describe": "PDF output filename",
+    "type": "string"
   },
   "size": {
     "alias": "s",
-    "describe": "Contain the image or cover the page",
     "type": "string",
     "default": "contain",
     "choices": [
@@ -33,32 +21,71 @@
   },
   "left": {
     "alias": "l",
-    "describe": "Left padding percentage",
+    "describe": "Set percent padding left",
     "type": "number",
     "default": 50
   },
   "top": {
     "alias": "t",
-    "describe": "Top padding percentage",
+    "describe": "Set percent padding top",
     "type": "number",
     "default": 50
   },
   "width": {
     "alias": "w",
-    "describe": "Page width in pixels",
+    "describe": "Set pixel width",
     "type": "number",
-    "default": 600
+    "implies": "height"
   },
   "height": {
     "alias": "h",
-    "describe": "Page height in pixels",
+    "describe": "Set pixel height",
     "type": "number",
-    "default": 840
+    "implies": "width"
   },
-  "match": {
-    "alias": "m",
-    "describe": "Matched filenames",
-    "type": "string",
-    "default": "(gif|jpe?g|png|svg)$"
+  "dry": {
+    "alias": "d",
+    "describe": "Perform dry run",
+    "type": "boolean"
+  },
+  "progress": {
+    "alias": "p",
+    "describe": "Show progress",
+    "type": "boolean",
+    "conflicts": "quiet"
+  },
+  "quiet": {
+    "alias": "q",
+    "describe": "Silence warnings",
+    "type": "boolean",
+    "conflicts": "progress"
+  },
+  "title": {
+    "describe": "Set title",
+    "type": "string"
+  },
+  "author": {
+    "describe": "Set author",
+    "type": "string"
+  },
+  "subject": {
+    "describe": "Set subject",
+    "type": "string"
+  },
+  "keywords": {
+    "describe": "Set keywords",
+    "type": "array"
+  },
+  "creator": {
+    "describe": "Set creator",
+    "type": "string"
+  },
+  "created": {
+    "describe": "Set creation date",
+    "type": "string"
+  },
+  "modified": {
+    "describe": "Set modified date",
+    "type": "string"
   }
 }

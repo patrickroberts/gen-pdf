@@ -1,122 +1,123 @@
 #!/usr/bin/env node
-'use strict'
+'use strict';
 
-const { resolve } = require('path')
-const { promisify } = require('util')
+const { createWriteStream } = require('fs');
+const { createCanvas, loadImage } = require('canvas');
+const glob = require('glob');
+const yargs = require('yargs');
+const config = require('./config');
+const { description } = require('./package');
 
-const { inject } = require('di-proxy')
-const { fs: { writeFile, readdir, stat } } = inject(name => {
-  return inject(method => {
-    return promisify(require(name)[method])
-  })
-})
-
-const yargs = require('yargs')
-const argv = yargs
-  .options(require('./config'))
-  .command('$0 <file> [images]')
+const { argv } = yargs
+  .command('$0 [images..]', description)
+  .options(config)
+  .scriptName('pdf')
   .alias('version', 'v')
-  .help()
-  .wrap(process.stdout.columns)
-  .argv
+  .strict()
+  .help();
 
-if (argv.orientation === 'landscape') {
-  const { width: height, height: width } = argv
-  Object.assign(argv, { width, height })
+main().catch(error => {
+  log(`${error.name}: ${error.message}`);
+  process.exitCode = 1;
+});
+
+async function main() {
+  const destination = argv.file && !argv.dry
+    ? createWriteStream(argv.file)
+    : process.stdout;
+
+  if (destination.isTTY && !argv.file) {
+    log('[WARN] output appears to be a terminal device');
+    log('[WARN] either use --file or redirect the output');
+  }
+
+  const { compare } = new Intl.Collator(undefined, { numeric: true });
+  const images = argv.images
+    .flatMap(pattern => glob.sync(pattern).sort(compare))
+    .map((filename, index) => [index, filename, task(() => loadImage(filename))]);
+
+  let canvas;
+  let ctx;
+
+  const next = (image) => {
+    const { width, height } = typeof argv.width === 'number' ? argv : image;
+
+    if (ctx) {
+      ctx.addPage(width, height);
+    } else {
+      canvas = createCanvas(width, height, 'pdf');
+      ctx = canvas.getContext('2d');
+    }
+
+    return { width, height };
+  };
+
+  for (const [index, filename, promise] of images) {
+    progress(index, images.length, `Loading page ${index + 1}: ${filename}`);
+
+    await task(async () => {
+      const image = await promise;
+      const page = next(image);
+      const { left, top, width, height } = size(page, image);
+
+      ctx.drawImage(image, left, top, width, height);
+    });
+  }
+
+  log(`[100%] Writing output${argv.file ? ` to ${argv.file}` : ''}`);
+
+  await task(async () => {
+    const {
+      title, author, subject, keywords, creator, created, modified,
+    } = argv;
+    const config = {
+      title, author, subject, creator,
+      keywords: keywords && keywords.join(' '),
+      creationDate: created && new Date(created),
+      modDate: modified && new Date(modified),
+    };
+
+    await new Promise((resolve, reject) => {
+      canvas.createPDFStream(config).pipe(destination).once('close', resolve).once('error', reject);
+    });
+  });
 }
 
-const filterRegExp = new RegExp(argv.match, 'i')
-const pageWidth = argv.width
-const pageHeight = argv.height
-const pageRatio = pageWidth / pageHeight
-
-const size = {
-  contain (imageWidth, imageHeight) {
-    const imageRatio = imageWidth / imageHeight
-    const widthScale = pageWidth / imageWidth
-    const heightScale = pageHeight / imageHeight
-    const isLandscape = imageRatio > pageRatio
-    const scale = isLandscape ? widthScale : heightScale
-    const width = imageWidth * scale
-    const height = imageHeight * scale
-    const left = isLandscape ? 0 : (pageWidth - width) * argv.left / 100
-    const top = isLandscape ? (pageHeight - height) * argv.top / 100 : 0
-
-    return { left, top, width, height }
-  },
-  cover (imageWidth, imageHeight) {
-    const imageRatio = imageWidth / imageHeight
-    const widthScale = pageWidth / imageWidth
-    const heightScale = pageHeight / imageHeight
-    const isLandscape = imageRatio > pageRatio
-    const scale = isLandscape ? heightScale : widthScale
-    const width = imageWidth * scale
-    const height = imageHeight * scale
-    const left = isLandscape ? (pageWidth - width) * argv.left / 100 : 0
-    const top = isLandscape ? 0 : (pageHeight - height) * argv.top / 100
-
-    return { left, top, width, height }
+async function task(fn) {
+  if (!argv.dry) {
+    return fn();
   }
 }
 
-const { createCanvas, loadImage } = require('canvas')
+function size(page, image) {
+  const pageRatio = page.width / page.height;
+  const imageRatio = image.width / image.height;
+  const widthScale = page.width / image.width;
+  const heightScale = page.height / image.height;
 
-const canvas = createCanvas(pageWidth, pageHeight, 'pdf')
-const ctx = canvas.getContext('2d')
+  const scale = {
+    contain: imageRatio > pageRatio,
+    cover: !(imageRatio > pageRatio),
+  }[argv.size] ? widthScale : heightScale;
 
-readdir(argv.images).then(async files => {
-  await (await Promise.all(files.map(async filename => {
-    const filepath = resolve(argv.images, filename)
-    const isFile = (await stat(filepath).catch(error => {
-      return { isFile () { return false } }
-    })).isFile()
-    const filter = filterRegExp.test(filename) && isFile
+  const width = image.width * scale;
+  const height = image.height * scale;
+  const left = (page.width - width) * argv.left / 100;
+  const top = (page.height - height) * argv.top / 100;
 
-    return { filename, filepath, filter }
-  }))).filter(({ filter }) => {
-    return filter
-  }).map(({ filename, filepath }) => {
-    const values = []
+  return { left, top, width, height };
+}
 
-    filename.replace(/\d+|\D+/g, match => values.push({
-      isNaN: isNaN(match),
-      string: String(match).toUpperCase(),
-      number: Number(match)
-    }))
+function progress(loaded, total, message) {
+  if (argv.dry || argv.progress) {
+    const percent = (100 * loaded / total).toFixed(0);
 
-    return { filepath, values }
-  }).sort(({ values: valuesA }, { values: valuesB }) => {
-    const length = Math.max(valuesA.length, valuesB.length)
-    let value = 0
+    log(`[${percent.padStart(3)}%] ${message}`);
+  }
+}
 
-    for (let index = 0; !value && index < length; index++) {
-      const a = valuesA[index]
-      const b = valuesB[index]
-
-      value = a.isNaN || b.isNaN
-        ? -(a.string < b.string) || +(a.string > b.string)
-        : a.number - b.number
-    }
-
-    return value
-  }).reduce(async (promise, { filepath }) => {
-    const page = 1 + await promise
-
-    console.log(`Loading ${filepath}...`)
-    const image = await loadImage(filepath)
-    const { left, top, width, height } = size[argv.size](image.width, image.height)
-
-    console.log(`Rendering page ${page}...`)
-    ctx.drawImage(image, left, top, width, height)
-    ctx.addPage()
-
-    return page
-  }, Promise.resolve(0))
-
-  console.log(`Writing to ${argv.file}...`)
-  return writeFile(argv.file, canvas.toBuffer())
-}).catch(error => {
-  console.error(error)
-
-  yargs.showHelp()
-})
+function log(message) {
+  if (!argv.quiet) {
+    console.error(message);
+  }
+}

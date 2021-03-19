@@ -1,7 +1,7 @@
 {
   "name": "gen-pdf",
-  "version": "0.1.0",
-  "description": "A command-line utility for generating a PDF file from a directory of images.",
+  "version": "1.0.0",
+  "description": "Create a PDF file from a set of images",
   "main": "index.js",
   "bin": {
     "pdf": "./index.js"
@@ -9,23 +9,15 @@
   "author": "Patrick Roberts",
   "license": "MIT",
   "dependencies": {
-    "canvas": "^2.0.0-alpha.6",
-    "di-proxy": "^2.0.3",
-    "yargs": "^10.0.3"
+    "@mapbox/node-pre-gyp": "^1.0.1",
+    "canvas": "^2.7.0",
+    "glob": "^7.1.6",
+    "yargs": "^16.2.0"
   },
-  "devDependencies": {},
-  "scripts": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/patrickroberts/gen-pdf.git"
-  },
+  "repository": "github:patrickroberts/gen-pdf",
   "keywords": [
     "pdf",
     "image",
     "cli"
-  ],
-  "bugs": {
-    "url": "https://github.com/patrickroberts/gen-pdf/issues"
-  },
-  "homepage": "https://github.com/patrickroberts/gen-pdf#readme"
+  ]
 }

@@ -1,42 +1,48 @@
 # gen-pdf
 
-A command-line utility for generating a PDF file from a directory of images.
+Create a PDF file from a set of images
 
 ## Installation
 
-```bash
+```sh
 npm link gen-pdf
 ```
 
 ## Documentation
 
 ```
-pdf <file> [images]
+pdf [images..]
 
 Options:
-  --version, -v      Show version number                    [boolean]
-  --file, -f         Name of pdf file output      [string] [required]
-  --images, -i       Directory of images      [string] [default: "."]
-  --orientation, -o  Orientation of pdf pages                [string]
-             [choices: "portrait", "landscape"] [default: "portrait"]
-  --size, -s         Contain the image or cover the page     [string]
-                   [choices: "contain", "cover"] [default: "contain"]
-  --left, -l         Left padding percentage   [number] [default: 50]
-  --top, -t          Top padding percentage    [number] [default: 50]
-  --width, -w        Page width in pixels     [number] [default: 600]
-  --height, -h       Page height in pixels    [number] [default: 840]
-  --match, -m        Matched filenames                       [string]
-                                    [default: "(gif|jpe?g|png|svg)$"]
-  --help             Show help                              [boolean]
+  -v, --version   Show version number                                  [boolean]
+  -i, --images    Image input filenames                       [array] [required]
+  -f, --file      PDF output filename                                   [string]
+  -s, --size         [string] [choices: "contain", "cover"] [default: "contain"]
+  -l, --left      Set percent padding left                [number] [default: 50]
+  -t, --top       Set percent padding top                 [number] [default: 50]
+  -w, --width     Set pixel width                                       [number]
+  -h, --height    Set pixel height                                      [number]
+  -d, --dry       Perform dry run                                      [boolean]
+  -p, --progress  Show progress                                        [boolean]
+  -q, --quiet     Silence warnings                                     [boolean]
+      --title     Set title                                             [string]
+      --author    Set author                                            [string]
+      --subject   Set subject                                           [string]
+      --keywords  Set keywords                                           [array]
+      --creator   Set creator                                           [string]
+      --created   Set creation date                                     [string]
+      --modified  Set modified date                                     [string]
+      --help      Show help                                            [boolean]
 ```
 
 ## Credit
 
-Built with [yargs] and [node-canvas][canvas].
+Built with [node-canvas][canvas], [yargs], and [glob].
 
 ## License
 
-Available under the MIT License (c) 2017 Patrick Roberts
+Available under the MIT License (c) 2021 Patrick Roberts
 
-[yargs]: https://www.npmjs.com/package/yargs
 [canvas]: https://www.npmjs.com/package/canvas
+[yargs]: https://www.npmjs.com/package/yargs
+[glob]: https://www.npmjs.com/package/glob
