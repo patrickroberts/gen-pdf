@@ -12,12 +12,9 @@
   },
   "size": {
     "alias": "s",
+    "describe": "Set to contain or cover",
     "type": "string",
-    "default": "contain",
-    "choices": [
-      "contain",
-      "cover"
-    ]
+    "default": "contain"
   },
   "left": {
     "alias": "l",

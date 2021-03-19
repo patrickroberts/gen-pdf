@@ -14,25 +14,25 @@ npm link gen-pdf
 pdf [images..]
 
 Options:
-  -v, --version   Show version number                                  [boolean]
-  -i, --images    Image input filenames                       [array] [required]
-  -f, --file      PDF output filename                                   [string]
-  -s, --size         [string] [choices: "contain", "cover"] [default: "contain"]
-  -l, --left      Set percent padding left                [number] [default: 50]
-  -t, --top       Set percent padding top                 [number] [default: 50]
-  -w, --width     Set pixel width                                       [number]
-  -h, --height    Set pixel height                                      [number]
-  -d, --dry       Perform dry run                                      [boolean]
-  -p, --progress  Show progress                                        [boolean]
-  -q, --quiet     Silence warnings                                     [boolean]
-      --title     Set title                                             [string]
-      --author    Set author                                            [string]
-      --subject   Set subject                                           [string]
-      --keywords  Set keywords                                           [array]
-      --creator   Set creator                                           [string]
-      --created   Set creation date                                     [string]
-      --modified  Set modified date                                     [string]
-      --help      Show help                                            [boolean]
+  -v, --version   Show version number
+  -i, --images    Image input filenames
+  -f, --file      PDF output filename
+  -s, --size      Set to contain or cover
+  -l, --left      Set percent padding left
+  -t, --top       Set percent padding top
+  -w, --width     Set pixel width
+  -h, --height    Set pixel height
+  -d, --dry       Perform dry run
+  -p, --progress  Show progress
+  -q, --quiet     Silence warnings
+      --title     Set title
+      --author    Set author
+      --subject   Set subject
+      --keywords  Set keywords
+      --creator   Set creator
+      --created   Set creation date
+      --modified  Set modified date
+      --help      Show help
 ```
 
 ## Credit
